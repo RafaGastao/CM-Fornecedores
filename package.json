@@ -1,0 +1,19 @@
+{
+  "name": "cm-fornecedores",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Cadastro e avaliação de fornecedores do restaurante Casa de Madeira",
+  "scripts": {
+    "start": "node --env-file-if-exists=.env server.js",
+    "dev": "node --watch --env-file-if-exists=.env server.js",
+    "check": "node --check server.js && node --check database.js && node --check public/script.js && node --check public/login.js && node --check mongodb.js"
+  },
+  "engines": {
+    "node": ">=24"
+  },
+  "dependencies": {
+    "express": "^5.3.0",
+    "mongodb": "^6.21.0",
+    "pg": "^8.16.3"
+  }
+}

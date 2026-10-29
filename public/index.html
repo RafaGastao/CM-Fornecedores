@@ -1,0 +1,386 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Casa de Madeira | Fornecedores</title>
+    <link rel="stylesheet" href="/style.css" />
+    <script src="/script.js" defer></script>
+  </head>
+  <body>
+    <header>
+      <div class="container">
+        <span class="marca">CM</span>
+        <div>
+          <p class="sobretitulo">RESTAURANTE</p>
+          <h1>Casa de Madeira</h1>
+        </div>
+        <button class="secundario" id="sair">Sair</button>
+      </div>
+    </header>
+    <main class="container">
+      <div class="introducao">
+        <p class="sobretitulo">PARCERIAS PARA A NOSSA COZINHA</p>
+        <h2>Cadastro e avaliação de fornecedores</h2>
+        <p>
+          Contatos, produtos e preços em um só lugar. Acompanhe quem fornece
+          para o restaurante.
+        </p>
+      </div>
+      <section class="resumo" aria-label="Resumo dos cadastros">
+        <article>
+          <span>Fornecedores cadastrados</span
+          ><strong id="total-fornecedores">0</strong>
+        </article>
+        <article>
+          <span>Produtos fornecidos</span><strong id="total-produtos">0</strong>
+        </article>
+        <article>
+          <span>Média das avaliações</span><strong id="media-geral">—</strong>
+        </article>
+      </section>
+      <nav class="abas" aria-label="Seções do sistema">
+        <button data-tab="fornecedores" aria-current="page">Fornecedores</button
+        ><button data-tab="produtos" class="secundario">
+          Produtos e preços</button
+        ><button data-tab="avaliacoes" class="secundario">Avaliações</button>
+      </nav>
+      <p id="mensagem" role="status" aria-live="polite"></p>
+      <section id="sec-fornecedores">
+        <div class="painel">
+          <h3 id="titulo-fornecedores">Cadastrar fornecedor</h3>
+          <form id="form-fornecedores">
+            <div class="campos fornecedor-campos">
+              <label
+                >Nome do fornecedor<input
+                  name="nome"
+                  maxlength="120"
+                  required
+                  placeholder="Ex.: Hortifruti da Serra"
+              /></label>
+              <label
+                >Pessoa de contato<input
+                  name="contato"
+                  maxlength="100"
+                  required
+                  placeholder="Nome do responsável"
+              /></label>
+              <label
+                >Telefone principal<input
+                  name="telefone"
+                  type="tel"
+                  maxlength="30"
+                  minlength="8"
+                  required
+                  placeholder="(11) 99999-9999"
+              /></label>
+              <label
+                >Outro telefone <small>opcional</small
+                ><input
+                  name="telefone2"
+                  type="tel"
+                  maxlength="30"
+                  placeholder="(11) 4000-0000"
+              /></label>
+              <label
+                >E-mail <small>opcional</small
+                ><input
+                  name="email"
+                  type="email"
+                  maxlength="160"
+                  placeholder="contato@fornecedor.com.br"
+              /></label>
+              <label
+                >Categoria<input
+                  name="categoria"
+                  maxlength="80"
+                  required
+                  list="categorias"
+                  placeholder="Ex.: Hortifruti"
+              /></label>
+              <label class="largura-total"
+                >Observações <small>opcional</small
+                ><textarea
+                  name="observacoes"
+                  maxlength="1000"
+                  rows="2"
+                  placeholder="Dias de entrega, condições de pagamento ou outras informações"
+                ></textarea>
+              </label>
+            </div>
+            <div class="acoes">
+              <button type="submit">Cadastrar fornecedor</button
+              ><button type="button" class="secundario cancelar" hidden>
+                Cancelar edição
+              </button>
+            </div>
+          </form>
+        </div>
+        <section class="painel">
+          <div class="cabecalho-lista">
+            <h3>Fornecedores do restaurante</h3>
+            <button class="secundario exportar" data-export="fornecedores">
+              Exportar CSV
+            </button>
+          </div>
+          <div class="filtros">
+            <label
+              >Buscar por nome, contato, telefone ou produto<input
+                id="busca-fornecedores"
+                type="search"
+                placeholder="Digite para buscar..." /></label
+            ><label
+              >Categoria<select id="filtro-categoria">
+                <option value="">Todas as categorias</option>
+              </select></label
+            >
+          </div>
+          <div class="tabela">
+            <table>
+              <thead>
+                <tr>
+                  <th>Fornecedor / contato</th>
+                  <th>Telefones / e-mail</th>
+                  <th>Categoria</th>
+                  <th>Produtos</th>
+                  <th>Avaliação</th>
+                  <th>Ações</th>
+                </tr>
+              </thead>
+              <tbody id="lista-fornecedores"></tbody>
+            </table>
+          </div>
+          <p id="vazio-fornecedores" class="vazio">
+            Nenhum fornecedor cadastrado. Comece pelo formulário acima.
+          </p>
+        </section>
+      </section>
+      <section id="sec-produtos" hidden>
+        <div class="painel">
+          <h3 id="titulo-produtos">Cadastrar produto</h3>
+          <p class="ajuda">
+            Compare preços considerando a mesma unidade de fornecimento.
+          </p>
+          <form id="form-produtos">
+            <div class="campos produto-campos">
+              <label
+                >Fornecedor<select
+                  name="fornecedor_id"
+                  class="select-fornecedor"
+                  required
+                >
+                  <option value="">Selecione um fornecedor</option>
+                </select></label
+              >
+              <label
+                >Produto<input
+                  name="nome"
+                  required
+                  maxlength="120"
+                  placeholder="Ex.: Tomate italiano"
+              /></label>
+              <label
+                >Unidade<select name="unidade" required>
+                  <option>kg</option>
+                  <option>g</option>
+                  <option>L</option>
+                  <option>mL</option>
+                  <option>unidade</option>
+                  <option>caixa</option>
+                  <option>pacote</option>
+                  <option>dúzia</option>
+                </select></label
+              >
+              <label
+                >Preço por unidade em R$<input
+                  name="preco"
+                  type="number"
+                  min="0"
+                  max="1000000"
+                  step="0.01"
+                  required
+                  placeholder="0,00"
+              /></label>
+            </div>
+            <div class="acoes">
+              <button type="submit">Cadastrar produto</button
+              ><button type="button" class="secundario cancelar" hidden>
+                Cancelar edição
+              </button>
+            </div>
+          </form>
+        </div>
+        <section class="painel">
+          <div class="cabecalho-lista">
+            <h3>Produtos e preços</h3>
+            <button class="secundario exportar" data-export="produtos">
+              Exportar CSV
+            </button>
+          </div>
+          <div class="filtros">
+            <label
+              >Buscar produto ou fornecedor<input
+                id="busca-produtos"
+                type="search"
+                placeholder="Digite para comparar..." /></label
+            ><label
+              >Fornecedor<select id="filtro-produtos" class="select-fornecedor">
+                <option value="">Todos os fornecedores</option>
+              </select></label
+            >
+          </div>
+          <div class="tabela">
+            <table>
+              <thead>
+                <tr>
+                  <th>Produto</th>
+                  <th>Fornecedor</th>
+                  <th>Unidade</th>
+                  <th>Preço</th>
+                  <th>Atualização</th>
+                  <th>Ações</th>
+                </tr>
+              </thead>
+              <tbody id="lista-produtos"></tbody>
+            </table>
+          </div>
+          <p id="vazio-produtos" class="vazio">
+            Nenhum produto cadastrado. Cadastre um fornecedor e adicione seus
+            produtos.
+          </p>
+        </section>
+      </section>
+      <section id="sec-avaliacoes" hidden>
+        <div class="painel">
+          <h3 id="titulo-avaliacoes">Registrar avaliação</h3>
+          <p class="ajuda">
+            Notas de 1 a 5. A média considera qualidade, pontualidade e
+            atendimento com o mesmo peso.
+          </p>
+          <form id="form-avaliacoes">
+            <div class="campos avaliacao-campos">
+              <label
+                >Fornecedor<select
+                  name="fornecedor_id"
+                  class="select-fornecedor"
+                  required
+                >
+                  <option value="">Selecione um fornecedor</option>
+                </select></label
+              >
+              <label
+                >Avaliado por<input
+                  name="avaliador"
+                  required
+                  maxlength="100"
+                  placeholder="Nome do funcionário"
+              /></label>
+              <label
+                >Data da avaliação<input name="data" type="date" required
+              /></label>
+              <label
+                >Qualidade<select name="qualidade" required>
+                  <option value="">Selecione</option>
+                  <option value="1">1 — Ruim</option>
+                  <option value="2">2 — Regular</option>
+                  <option value="3">3 — Bom</option>
+                  <option value="4">4 — Muito bom</option>
+                  <option value="5">5 — Excelente</option>
+                </select></label
+              >
+              <label
+                >Pontualidade<select name="pontualidade" required>
+                  <option value="">Selecione</option>
+                  <option value="1">1 — Ruim</option>
+                  <option value="2">2 — Regular</option>
+                  <option value="3">3 — Bom</option>
+                  <option value="4">4 — Muito bom</option>
+                  <option value="5">5 — Excelente</option>
+                </select></label
+              >
+              <label
+                >Atendimento<select name="atendimento" required>
+                  <option value="">Selecione</option>
+                  <option value="1">1 — Ruim</option>
+                  <option value="2">2 — Regular</option>
+                  <option value="3">3 — Bom</option>
+                  <option value="4">4 — Muito bom</option>
+                  <option value="5">5 — Excelente</option>
+                </select></label
+              >
+              <label class="largura-total"
+                >Comentário <small>opcional</small
+                ><textarea
+                  name="comentario"
+                  rows="2"
+                  maxlength="1000"
+                  placeholder="Como foi a entrega e a experiência com o fornecedor?"
+                ></textarea>
+              </label>
+            </div>
+            <div class="acoes">
+              <button type="submit">Registrar avaliação</button
+              ><button type="button" class="secundario cancelar" hidden>
+                Cancelar edição
+              </button>
+            </div>
+          </form>
+        </div>
+        <section class="painel">
+          <div class="cabecalho-lista">
+            <h3>Histórico de avaliações</h3>
+            <button class="secundario exportar" data-export="avaliacoes">
+              Exportar CSV
+            </button>
+          </div>
+          <div class="filtros">
+            <label
+              >Buscar fornecedor, avaliador ou comentário<input
+                id="busca-avaliacoes"
+                type="search"
+                placeholder="Digite para buscar..." /></label
+            ><label
+              >Fornecedor<select
+                id="filtro-avaliacoes"
+                class="select-fornecedor"
+              >
+                <option value="">Todos os fornecedores</option>
+              </select></label
+            >
+          </div>
+          <div class="tabela">
+            <table>
+              <thead>
+                <tr>
+                  <th>Fornecedor / comentário</th>
+                  <th>Data / avaliador</th>
+                  <th>Qualidade</th>
+                  <th>Pontualidade</th>
+                  <th>Atendimento</th>
+                  <th>Média</th>
+                  <th>Ações</th>
+                </tr>
+              </thead>
+              <tbody id="lista-avaliacoes"></tbody>
+            </table>
+          </div>
+          <p id="vazio-avaliacoes" class="vazio">
+            Nenhuma avaliação registrada. Avalie o primeiro fornecedor acima.
+          </p>
+        </section>
+      </section>
+      <datalist id="categorias">
+        <option value="Hortifruti"></option>
+        <option value="Carnes e aves"></option>
+        <option value="Bebidas"></option>
+        <option value="Mercearia"></option>
+        <option value="Laticínios"></option>
+        <option value="Limpeza e descartáveis"></option>
+      </datalist>
+      <footer>
+        Projeto de extensão • Casa de Madeira<br />Os registros ficam salvos no
+        banco de dados. Atualize para consultar mudanças da equipe.
+      </footer>
+    </main>
+  </body>
+</html>
